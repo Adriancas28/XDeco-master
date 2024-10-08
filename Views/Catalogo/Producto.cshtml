@@ -1,0 +1,58 @@
+@model XDeco.Models.Producto
+
+@{
+    ViewData["Title"] = Model.Nombre;
+}
+<style>
+ .bt {
+                width: 200px;
+                height: 50px;
+                border-radius: 10px;
+                box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+                margin-bottom: 10px;
+                background-color: #cac3b0;
+                border-color: #c2bdaf;
+                color: black
+            }
+            </style>
+<h1>@Model.Nombre</h1>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="@Model.ImageURL" alt="@Model.Nombre" class="img-fluid" />
+        </div>
+        <div class="col-md-6">
+            <h3>Precio: S/. @Model.Precio</h3>
+            <p><strong>Descripción:</strong> @Model.Descripcion</p>
+            <p><strong>Material:</strong> @Model.Material</p>
+            <p><strong>Color:</strong> @Model.Color</p>
+            <p><strong>Ajustable:</strong> @(Model.EsAjustable ? "Sí" : "No")</p>
+            @if (Model.Dimensiones != null)
+            {
+                <p><strong>Dimensiones:</strong> @Model.Dimensiones.Ancho x @Model.Dimensiones.Alto x
+                    @Model.Dimensiones.Largo</p>
+            }
+            else
+            {
+                <p><strong>Dimensiones:</strong> No disponibles</p>
+            }
+            <div class="text-center">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <form asp-controller="Carrito" asp-action="AñadirAlCarrito" method="post">
+                        <input type="hidden" name="productoId" value="@Model.Id" />
+                        <button type="submit" class="bt btn-primary">Añadir a la cesta</button>
+                    </form>
+                }
+                else
+                {
+                    <div class="alert alert-warning">
+                        Debes <a href="/Identity/Account/Login">iniciar sesión</a> para añadir productos a la cesta.
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <a href="@Url.Action("Index", "Catalogo")" class="btn btn-secondary mt-4">Volver al Catálogo</a>
